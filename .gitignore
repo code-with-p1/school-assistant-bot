@@ -46,7 +46,7 @@ ehthumbs.db
 Thumbs.db
 
 # Streamlit
-.streamlit/secrets.toml  # Keep this private!
+.streamlit/
 
 # Jupyter
 .ipynb_checkpoints
