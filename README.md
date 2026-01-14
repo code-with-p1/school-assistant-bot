@@ -162,7 +162,7 @@ school-assistant-bot/                     # AI-powered School Assistant using La
 Edit the `SCHOOL_DOCUMENTS` list in `data\school_knowledge.py`:
 
 ```python
-school_facts = [
+SCHOOL_DOCUMENTS = [
     "Your custom school information here...",
     "Add as many facts as you need...",
     "The system will automatically learn from these!",
