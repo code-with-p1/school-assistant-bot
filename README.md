@@ -64,6 +64,13 @@ pip install -r requirements.txt
 Create a .streamlit/secrets.toml file:
 ```
 GEMINI_API_KEY = "your_gemini_api_key_here"
+GEMINI_MODEL = "your_gemini_model_name_here"
+```
+
+and create a .env file as well:
+```
+GEMINI_API_KEY = "your_gemini_api_key_here"
+GEMINI_MODEL = "your_gemini_model_name_here"
 ```
 
 Or set it directly in the code (for testing):
@@ -76,7 +83,7 @@ genai.configure(api_key="your_actual_api_key_here")
 
 ### Step 5: Run the Application
 ```
-streamlit run school_bot_ui.py
+streamlit run app.py
 ```
 
 ### Step 6: Access the Bot
@@ -116,21 +123,43 @@ Try asking these questions:
 
 ## 📁 Project Structure
 ```
-school-assistant-bot/
-├── school_bot_ui.py          # Main Streamlit application
-├── requirements.txt          # Python dependencies
-├── README.md                # Project documentation
+school-assistant-bot/                     # AI-powered School Assistant using LangChain + Gemini + ChromaDB
+├── app.py                          # Main Streamlit application (entry point)
+├── requirements.txt                # Project dependencies
+├── README.md                       # This file
 ├── .streamlit/
-│   └── secrets.toml         # API keys (create this)
-└── assets/
-└── demo-screenshot.png  # Project screenshot
+│   └── secrets.toml                # API keys & configuration (git ignored)
+│
+├── config/                         # Application-wide constants & settings
+│   └── settings.py
+│
+├── core/                           # LLM and prompt related logic
+│   ├── __init__.py
+│   ├── llm.py                      # Google Gemini model initialization
+│   └── prompt_templates.py         # System & chat prompt definitions
+│
+├── rag/                            # Retrieval-Augmented Generation components
+│   ├── __init__.py
+│   ├── vectorstore.py              # Chroma vector database management
+│   ├── retriever.py                # Document retrieval logic
+│   └── chain.py                    # Full RAG chain (retriever + prompt + LLM)
+│
+├── data/                           # Static knowledge base
+│   └── school_knowledge.py         # School facts/documents used for RAG
+│
+├── utils/                          # General utilities & helpers
+│   ├── __init__.py
+│   └── helpers.py                  # Session state, formatting helpers, etc.
+│
+└── chroma_db/                      # Persistent ChromaDB storage (git ignored)
+    └── ... (generated files)
 ```
 
 ## 🔧 Customization
 
 ### Adding Your Own School Information
 
-Edit the `school_facts` list in `school_bot_ui.py`:
+Edit the `SCHOOL_DOCUMENTS` list in `data\school_knowledge.py`:
 
 ```python
 school_facts = [
@@ -144,21 +173,25 @@ school_facts = [
 Adjust the prompt template in the full_prompt variable:
 ```
 full_prompt = f"""
-CONTEXT: You are a helpful school assistant...
+You are a very friendly, kind and helpful school assistant.
+Talk naturally like a supportive older sibling.
 
-SCHOOL INFORMATION:
-{facts_text}
+Use only the provided school information below to answer.
+If you don't have enough information or the topic is not covered — say it honestly.
 
-STUDENT'S QUESTION: {prompt}
+School information:
+{context}
 
-# Modify instructions here for different behavior
-INSTRUCTIONS:
-1. Give direct, friendly answers
-2. Use the school information provided
-3. Be encouraging and helpful
+Question: {question}
 
-Answer:
-"""
+Answer in natural, conversational style.
+Do NOT use numbered lists unless the question is clearly asking for steps or ranking.
+Be warm, clear and supportive.Just write a helpful, friendly reply like you would say it in person.
+
+Important: Only use numbers 1. 2. etc. when the question is clearly asking for steps or multiple separate points.  
+For normal questions, write like a normal conversation.
+
+Answer:"""
 ```
 
 # 🌟 Learning Outcomes
