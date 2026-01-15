@@ -173,6 +173,7 @@ This makes it much easier to maintain large amounts of information (rules, timet
      - Any other official school information
 
 2. **Place the PDFs in the correct folder**
+```
 school-assistant-bot/
 ├── data/
 │   ├── school_docs/               ← ← ← PUT ALL YOUR PDFs HERE
@@ -181,6 +182,7 @@ school-assistant-bot/
 │   │   ├── fee_structure_2026.pdf
 │   │   ├── library_guidelines.pdf
 │   │   └── ...
+```
 
 3. **(Re)start the application**
 - The system automatically:
