@@ -65,20 +65,14 @@ Create a .streamlit/secrets.toml file:
 ```
 GEMINI_API_KEY = "your_gemini_api_key_here"
 GEMINI_MODEL = "your_gemini_model_name_here"
+HUGGINGFACEHUB_API_TOKEN = "your_huggingface_api_key_here"
 ```
 
 and create a .env file as well:
 ```
 GEMINI_API_KEY = "your_gemini_api_key_here"
 GEMINI_MODEL = "your_gemini_model_name_here"
-```
-
-Or set it directly in the code (for testing):
-```
-# In school_bot_ui.py, replace:
-genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-# With:
-genai.configure(api_key="your_actual_api_key_here")
+HUGGINGFACEHUB_API_TOKEN = "your_huggingface_api_key_here"
 ```
 
 ### Step 5: Run the Application
@@ -144,8 +138,13 @@ school-assistant-bot/                     # AI-powered School Assistant using La
 │   ├── retriever.py                # Document retrieval logic
 │   └── chain.py                    # Full RAG chain (retriever + prompt + LLM)
 │
-├── data/                           # Static knowledge base
-│   └── school_knowledge.py         # School facts/documents used for RAG
+├── data/
+│   ├── school_docs/                  ← ← ← PUT YOUR PDFs HERE
+│   │   ├── school_rules_2025.pdf
+│   │   ├── timetable_2025-26.pdf
+│   │   ├── admission_policy.pdf
+│   │   └── ...
+│   └── school_knowledge_loader.py    ← new file: loads & processes PDFs
 │
 ├── utils/                          # General utilities & helpers
 │   ├── __init__.py
@@ -155,19 +154,51 @@ school-assistant-bot/                     # AI-powered School Assistant using La
     └── ... (generated files)
 ```
 
-## 🔧 Customization
+## 🔧 Customization – Adding Your Own School Information
 
-### Adding Your Own School Information
+The bot now loads school knowledge **automatically from PDF files** instead of using a hardcoded list.  
+This makes it much easier to maintain large amounts of information (rules, timetables, policies, syllabus, etc.).
 
-Edit the `SCHOOL_DOCUMENTS` list in `data\school_knowledge.py`:
+### Step-by-step: How to add or update school information
 
-```python
-SCHOOL_DOCUMENTS = [
-    "Your custom school information here...",
-    "Add as many facts as you need...",
-    "The system will automatically learn from these!",
-]
-```
+1. **Prepare your PDF files**
+   - Gather all relevant school documents (PDF format only)
+   - Good examples:
+     - School rules & regulations
+     - Academic calendar / timetable
+     - Admission policy
+     - Fee structure
+     - Library guidelines
+     - Sports & extracurricular rules
+     - Any other official school information
+
+2. **Place the PDFs in the correct folder**
+school-assistant-bot/
+├── data/
+│   ├── school_docs/               ← ← ← PUT ALL YOUR PDFs HERE
+│   │   ├── school_rules_2025-26.pdf
+│   │   ├── academic_calendar.pdf
+│   │   ├── fee_structure_2026.pdf
+│   │   ├── library_guidelines.pdf
+│   │   └── ...
+
+3. **(Re)start the application**
+- The system automatically:
+  - Scans the `data/school_docs/` folder
+  - Extracts text from all `.pdf` files
+  - Splits content into meaningful chunks
+  - Stores everything in the Chroma vector database
+
+**Important:**  
+To apply changes (add new PDFs, replace existing ones, or update content):
+- Add/remove/modify files in `data/school_docs/`
+- **Delete the `chroma_db/` folder** (to force re-indexing)  
+  ```bash
+  # On Windows
+  rmdir /s /q chroma_db
+
+  # On Linux/Mac
+  rm -rf chroma_db
 
 ### Modifying the AI Behavior
 Adjust the prompt template in the full_prompt variable:
