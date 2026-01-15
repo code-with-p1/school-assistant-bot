@@ -2,6 +2,8 @@
 
 An intelligent School Assistant Bot built with Generative AI and RAG (Retrieval-Augmented Generation) technology. This project demonstrates how AI can provide accurate, context-aware answers about school information by combining semantic search with large language models.
 
+![School Assistant Bot Demo](demo-screenshot.png)
+
 [![AI-School Assistant](https://img.shields.io/badge/AI-School%2520Assistant-blue)] [![Python-3.8+](https://img.shields.io/badge/Python-3.8%252B-green)] [![UI-Streamlit](https://img.shields.io/badge/UI-Streamlit-red)] [![Architecture-RAG](https://img.shields.io/badge/Architecture-RAG-orange)]
 
 ## 🎯 Project Overview
